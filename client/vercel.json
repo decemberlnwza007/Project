@@ -1,20 +1,5 @@
 {
-    "routes": [
-        {
-            "src": "/",
-            "dest": "/"
-        },
-        {
-            "src": "/Home",
-            "dest": "/"
-        },
-        {
-            "src": "/Manageuser",
-            "dest": "/"
-        },
-        {
-            "src": "Register",
-            "dest": "/"
-        }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
     ]
-}
+  }
