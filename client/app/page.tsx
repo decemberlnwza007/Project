@@ -78,8 +78,13 @@ export default function Login() {
       const response = await axios.post(`${BASE_URL}/login`, { username, password })
       if (response.status === 200) {
         const { token, role } = response.data
-        localStorage.setItem('token', token)
-        window.location.replace("/Home")
+        if (role === 'admin') {
+          window.location.replace('/Home')
+          localStorage.setItem('token', token)
+        } else if (role === 'user') {
+          window.location.replace('/HomeUser')
+          localStorage.setItem('token', token)
+        }
       } else {
         setError("Login failed")
       }

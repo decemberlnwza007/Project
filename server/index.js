@@ -194,6 +194,7 @@ app.delete('/menu/:id', async (req, res) => {
     }
 })
 
+
 app.listen(port, async () => {
     await initMySQL()
     console.log(`Server is running on port ${port}`)

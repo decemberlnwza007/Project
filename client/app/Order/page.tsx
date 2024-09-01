@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import Navbar from "@/components/navbar";
+import NavbarUser from "@/components/navbaruser";
 
-export default function Menu() {
+export default function Order() {
 
     interface MenuItem {
         id: number;
@@ -36,7 +36,7 @@ export default function Menu() {
 
     return (
         <>
-            <Navbar />
+            <NavbarUser />
             <br />
             <br />
             <div className="gap-5 grid grid-cols-2 sm:grid-cols-4">
@@ -58,6 +58,7 @@ export default function Menu() {
                             <p className="text-default-500">{item.price} บาท</p>
                         </CardFooter>
 
+                        <Button style={{ color: "#fff", backgroundColor: "#17C964" }} className="w-full">สั่งอาหาร</Button>
                     </Card>
                 ))}
             </div>
