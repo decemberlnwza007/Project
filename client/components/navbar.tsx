@@ -35,6 +35,16 @@ const Navbar: FC = () => {
         </a>
       </h1>
 
+      <nav className='text-lg font-semibold nav'>
+        <ul className='flex items-center'>
+          <li className="p-4 border-b-2 border-orange-500 border-opacity-0 hover:border-opacity-100 hover:text-orange-500 duration-200 cursor-pointer rounded-lg">
+            <a href="/Menu">เมนู</a>
+          </li>
+          <li className="p-4 border-b-2 border-orange-500 border-opacity-0 hover:border-opacity-100 hover:text-orange-500 duration-200 cursor-pointer rounded-lg">
+            <a href="/Menu">พนักงาน</a>
+          </li>
+        </ul>
+      </nav>
 
       <nav className="nav font-semibold text-lg">
         <ul className="flex items-center">
@@ -42,10 +52,7 @@ const Navbar: FC = () => {
             <a href="/Manageuser">จัดการผู้ใช้</a>
           </li>
           <li className="p-4 border-b-2 border-orange-500 border-opacity-0 hover:border-opacity-100 hover:text-orange-500 duration-200 cursor-pointer rounded-lg">
-            <a href="#">จัดการเมนู</a>
-          </li>
-          <li className="p-4 border-b-2 border-orange-500 border-opacity-0 hover:border-opacity-100 hover:text-orange-500 duration-200 cursor-pointer rounded-lg">
-            <a href="#">จัดการวัตถุดิบ</a>
+            <a href="/ManageMenu">จัดการเมนู</a>
           </li>
           <li className="p-4 border-b-2 border-orange-500 border-opacity-0 hover:border-opacity-100 hover:text-orange-500 duration-200 cursor-pointer rounded-lg">
             <a href="#">จัดการผนักงาน</a>

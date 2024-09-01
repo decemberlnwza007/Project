@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
+const path = require('path')
 
 const app = express()
 app.use(cors({
@@ -12,6 +14,22 @@ app.use(cors({
     origin: ['http://localhost:3000']
 }));
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({ storage })
+
+const fs = require('fs')
+const uploadDir = './uploads'
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir)
+}
 
 const port = 8000
 
@@ -89,6 +107,19 @@ app.get('/users', async (req, res) => {
     }
 });
 
+app.put('/users/:id', async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    try {
+        const [results] = await conn.query('UPDATE member SET ? WHERE id = ?', [data, id]);
+        res.json(results);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+
 app.delete('/delete/:id', async (req, res) => {
     const id = req.params.id;
     try {
@@ -104,7 +135,64 @@ app.delete('/delete/:id', async (req, res) => {
     }
 });
 
+app.get('/menu', async (req, res) => {
+    try {
+        const [results] = await conn.query('SELECT * FROM menu');
+        res.json({ message: 'Show success', data: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+});
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.post('/menu', upload.single('picture'), async (req, res) => {
+    try {
+        const data = req.body;
+        const picture = req.file ? `/uploads/${req.file.filename}` : null
+        const menuData = { ...data, picture }
+        const [results] = await conn.query('INSERT INTO menu SET ?', menuData)
+        res.json({ message: 'Menu item added successfully', results })
+    } catch (error) {
+        console.error('Error adding menu item:', error)
+        res.status(500).send({ message: 'Internal Server Error' })
+    }
+});
+
+
+app.put('/menu/:id', async (req, res) => {
+    const id = req.params.id
+    const { menu_name, qty, price, info } = req.body
+
+    console.log('Update data:', { menu_name, qty, price, info, id })
+
+    try {
+        const [results] = await conn.query(
+            'UPDATE menu SET menu_name = ?, qty = ?, price = ?, info = ? WHERE id = ?',
+            [menu_name, qty, price, info, id]
+        )
+        if (results.affectedRows > 0) {
+            res.json({ message: 'Update Menu successfully' })
+        } else {
+            res.status(404).json({ message: 'Menu item not found' })
+        }
+    } catch (error) {
+        console.error('Error updating menu', error)
+        res.status(500).send({ message: 'Internal Server Error' })
+    }
+})
+
+app.delete('/menu/:id', async (req, res) => {
+    const id = req.params.id
+    try {
+        const [results] = await conn.query('DELETE FROM menu WHERE id = ?', id)
+        res.json({ message: 'Delete Menu Successfully', results })
+    } catch (error) {
+        console.error('Error Delete Menu', error)
+        res.status(500).send({ message: 'Internal Server Error' })
+    }
+})
 
 app.listen(port, async () => {
     await initMySQL()
